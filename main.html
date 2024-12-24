@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Peter Pan Bus Tracker</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css" rel="stylesheet" />
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        #map {
+            height: 400px;
+            margin: 20px 0;
+            border: 1px solid #ccc;
+        }
+        .info-box {
+            background: #f5f5f5;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        input, button {
+            padding: 8px;
+            margin: 5px;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Peter Pan Bus Tracker</h1>
+    
+    <div>
+        <input type="text" id="busNumber" placeholder="Enter bus number" />
+        <button onclick="trackBus()">Track Bus</button>
+    </div>
+
+    <div class="info-box" id="busInfo">
+        Enter a bus number to see its location and estimated arrival time.
+    </div>
+
+    <div id="map"></div>
+
+    <script>
+        let map;
+        let marker;
+
+        // Initialize map
+        function initMap() {
+            map = L.map('map').setView([42.3601, -71.0589], 8);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors'
+            }).addTo(map);
+        }
+
+        // Track bus function
+        function trackBus() {
+            const busNumber = document.getElementById('busNumber').value;
+            
+            // Simulated bus data - in real implementation, this would fetch from an API
+            const mockBusData = {
+                latitude: 42.3601 + Math.random() * 0.1,
+                longitude: -71.0589 + Math.random() * 0.1,
+                estimatedArrival: new Date(Date.now() + 30 * 60000).toLocaleTimeString()
+            };
+
+            updateBusLocation(mockBusData);
+            updateBusInfo(mockBusData);
+        }
+
+        // Update bus location on map
+        function updateBusLocation(data) {
+            if (marker) {
+                map.removeLayer(marker);
+            }
+            marker = L.marker([data.latitude, data.longitude]).addTo(map);
+            map.setView([data.latitude, data.longitude], 10);
+        }
+
+        // Update bus information
+        function updateBusInfo(data) {
+            document.getElementById('busInfo').innerHTML = `
+                <strong>Bus Location:</strong> (${data.latitude.toFixed(4)}, ${data.longitude.toFixed(4)})<br>
+                <strong>Estimated Arrival:</strong> ${data.estimatedArrival}
+            `;
+        }
+
+        // Initialize map when page loads
+        window.onload = initMap;
+    </script>
+</body>
+</html>
